@@ -32,10 +32,11 @@ export default class AllowancesController {
         return response.redirect().toRoute('dashboard')
     }
 
-    async show({ auth, params, response, view }: HttpContext) {
+    async show({ auth, params, response, view, session }: HttpContext) {
         const user = auth.getUserOrFail()
         if (user.role !== 'HR') {
-            return response.unauthorized('Only HR can review requests')
+            session.flash('error', 'Only HR can review requests')
+            return response.redirect().back()
         }
         const id = params.id
         const allowance = await AllowanceRequest.query().where('id', id).preload('user').firstOrFail()
@@ -45,7 +46,8 @@ export default class AllowancesController {
     async approve({ auth, params, response, session }: HttpContext) {
         const user = auth.getUserOrFail()
         if (user.role !== 'HR') {
-            return response.unauthorized('Only HR can reject requests')
+            session.flash('error', 'Only HR can approve requests')
+            return response.redirect().back()
         }
         const id = params.id
         const allowance = await AllowanceRequest.findOrFail(id)
@@ -59,7 +61,8 @@ export default class AllowancesController {
     async reject({ auth, params, request, response, session }: HttpContext) {
         const user = auth.getUserOrFail()
         if (user.role !== 'HR') {
-            return response.unauthorized('Only HR can reject requests')
+            session.flash('error', 'Only HR can reject requests')
+            return response.redirect().back()
         }
         const id = params.id
         const allowance = await AllowanceRequest.findOrFail(id)
