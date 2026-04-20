@@ -1,19 +1,4 @@
-<div class="field {{ flashMessages.has(`errors.${name}`) ? 'error' : '' }}">
-  @if(label)
-    <label>{{ label }}</label>
-  @end
-  
-  <input 
-    type="{{ type || 'text' }}" 
-    name="{{ name }}" 
-    value="{{ old(name) || value || '' }}" 
-    {{ required ? 'required' : '' }}
-    placeholder="{{ placeholder || '' }}"
-  >
-
-  @if(flashMessages.has(`errors.${name}`))
-    <div class="ui pointing red basic label">
-      {{ flashMessages.get(`errors.${name}`) }}
-    </div>
-  @end
+<div class="field">
+    <label for="{{ name }}">{{ label }}</label>
+    <input id="{{ name }}" name="{{ name }}" {{ $props.except(['label']).toAttrs() }}>
 </div>
