@@ -11,15 +11,17 @@ export default class UsersController {
         const { username, password } = request.only(['username', 'password'])
 
         try {
-
+            if (!username || !password) {
+                session.flash('error', 'กรุณากรอกข้อมูลให้ครบถ้วน')
+                return response.redirect().back()
+            }
             const user = await User.verifyCredentials(username, password)
             await auth.use('web').login(user)
             session.flash('success', `ยินดีต้อนรับคุณ ${user.fullName}`)
-            return response.redirect().toRoute('leaves.index')
-        }   catch (error) {
-
-        session.flash('error', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
-        return response.redirect().back()
+            return response.redirect().toRoute('dashboard')
+        } catch (error) {
+            session.flash('error', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
+            return response.redirect().back()
         }
     }
 
