@@ -1,0 +1,122 @@
+@component('components/layouts/master', { title: 'Dashboard - HR System' })
+  @slot('main')
+    <h1 class="ui header">
+      <i class="dashboard icon"></i>
+      <div class="content">
+        Dashboard
+        <div class="sub header">Welcome to HR Management System</div>
+      </div>
+    </h1>
+
+    <div class="ui divider"></div>
+
+    <!-- ส่วนสถิติ -->
+    <div class="ui two statistics" style="margin-bottom: 30px;">
+      <div class="statistic">
+        <div class="value">
+          {{ pendingLeavesCount || 0 }}
+        </div>
+        <div class="label">
+          Pending Leave Requests
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="value">
+          <i class="money bill alternate outline icon"></i> {{ pendingAllowancesCount || 0 }}
+        </div>
+        <div class="label">
+          Pending Allowance Requests
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนรายการตาราง 2 ส่วน (Grid) -->
+    <div class="ui stackable two column grid">
+      
+      <!-- ฝั่งซ้าย: ลางานล่าสุด -->
+      <div class="column">
+        <div class="ui segment">
+          <h3 class="ui header">
+            <i class="calendar minus outline icon"></i> 5 Recent Leave Requests
+          </h3>
+          <table class="ui celled striped very basic table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @each(leave in recentLeaves)
+              <tr>
+                <td>{{ leave.user ? leave.user.fullName : '-' }}</td>
+                <td>{{ leave.leaveType }}</td>
+                <td>
+                  @if(leave.status === 0)
+                    <div class="ui mini yellow label">Pending</div>
+                  @elseif(leave.status === 1)
+                    <div class="ui mini green label">Approved</div>
+                  @else
+                    <div class="ui mini red label">Rejected</div>
+                  @end
+                </td>
+              </tr>
+              @else
+              <tr>
+                <td colspan="3" class="center aligned" style="color: grey;">No recent leave requests</td>
+              </tr>
+              @end
+            </tbody>
+          </table>
+          <div style="text-align: right;">
+            <a href="{{ route('leaves.index') }}" class="ui mini basic button">See All ></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ฝั่งขวา: เบี้ยเลี้ยงล่าสุด -->
+      <div class="column">
+        <div class="ui segment">
+          <h3 class="ui header">
+            <i class="wallet icon"></i> 5 Recent Allowance Requests
+          </h3>
+          <table class="ui celled striped very basic table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Title</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @each(all in recentAllowances)
+              <tr>
+                <td>{{ all.user ? all.user.fullName : '-' }}</td>
+                <td>{{ all.title }}</td>
+                <td>
+                  @if(all.status === 0)
+                    <div class="ui mini yellow label">Pending</div>
+                  @elseif(all.status === 1)
+                    <div class="ui mini green label">Approved</div>
+                  @else
+                    <div class="ui mini red label">Rejected</div>
+                  @end
+                </td>
+              </tr>
+              @else
+              <tr>
+                <td colspan="3" class="center aligned" style="color: grey;">No recent allowance requests</td>
+              </tr>
+              @end
+            </tbody>
+          </table>
+          <div style="text-align: right;">
+            <a href="{{ route('allowances.index') }}" class="ui mini basic button">See All ></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  @end
+@end

@@ -1,0 +1,20 @@
+@component('components/layouts/master', { title: typeof allowance !== 'undefined' ? 'Edit Allowance Request' : 'New Allowance Request' })
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Create Allowance Request</h2>
+      
+      <form action="{{ route('allowances.store') }}" method="POST" class="ui form segment">
+        {{ csrfField() }}
+        @!input({ name: 'title', type: 'text', label: 'Title:', required: true, placeholder: 'เช่น ค่าที่พัก, ค่าเดินทาง' })
+        <div class="two fields">
+          @!input({ name: 'amount', type: 'number', label: 'Amount (Baht):', required: true, placeholder: '0.00' })
+          @!input({ name: 'expenseDate', type: 'date', label: 'Expense Date:', required: true })
+        </div>
+        <div style="margin-top: 20px;">
+          @!button({ type: 'submit', label: 'Save' })
+          @!button({ label: 'Cancel', action: route('dashboard') })
+        </div>
+      </form>
+    </div>
+  @end
+@end

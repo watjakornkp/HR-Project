@@ -1,0 +1,29 @@
+<div class="ui inverted blue menu">
+  <div class="ui container">
+    <a href="{{ route('dashboard') }}" class="header item">HR Management System</a>
+    
+    @if(auth.user)
+      <div class="right menu">
+        <div class="ui dropdown item">
+          <i class="user icon"></i>
+          {{ auth.user.fullName }} ({{ auth.user.role }})
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="item">
+              <form action="{{ route('users.logout') }}" method="POST" style="margin: 0; padding: 0;">
+                {{ csrfField() }}
+                <button type="submit" style="background: none; border: none; padding: 0; color: #DB2828; cursor: pointer; text-align: left; width: 100%;">
+                  <i class="sign-out icon"></i> Logout
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    @else
+      <div class="right menu">
+        <a href="{{ route('login') }}" class="item">Login</a>
+      </div>
+    @end
+  </div>
+</div>

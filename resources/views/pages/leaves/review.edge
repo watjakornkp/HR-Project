@@ -1,0 +1,47 @@
+@component('components/layouts/master', { title: 'ระบบลางาน - พิจารณาคำขอ' })
+
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Review Leave Request</h2>
+      
+      <div class="ui segment">
+        <h4 class="ui dividing header">Leave Details</h4>
+        <div class="ui relaxed list">
+          <div class="item">
+            <i class="user icon"></i>
+            <div class="content"><strong>Employee Name:</strong> {{ req.user ? req.user.fullName : '-' }}</div>
+          </div>
+          <div class="item">
+            <i class="tag icon"></i>
+            <div class="content"><strong>Leave Type:</strong> {{ req.leaveType }}</div>
+          </div>
+          <div class="item">
+            <i class="calendar icon"></i>
+            <div class="content"><strong>Start Date:</strong> {{ req.startDate.toFormat('dd-MM-yyyy') || req.startDate }} ถึง {{ req.endDate.toFormat('dd-MM-yyyy') || req.endDate }}</div>
+          </div>
+          <div class="item">
+            <i class="sticky note icon"></i>
+            <div class="content"><strong>Reason:</strong> {{ req.reason }}</div>
+          </div>
+        </div>
+      </div>
+
+      <form method="POST" class="ui form segment">
+        {{ csrfField() }}
+        <h4 class="ui header">HR Decision</h4>
+        
+        <div class="field">
+          <label>Reason (Required when rejecting):</label>
+          <textarea name="rejectReason" rows="3" placeholder="Enter reason..."></textarea>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <!-- ใช้ formaction สร้างปุ่ม 2 อันที่ยิงไปคนละ Route ได้สบายๆ ใน Form เดียว -->
+          <button type="submit" formaction="{{ route('leaves.approve', { id: req.id }) }}" class="ui positive button"><i class="check icon"></i> Approve</button>
+          <button type="submit" formaction="{{ route('leaves.reject', { id: req.id }) }}" class="ui negative button"><i class="times icon"></i> Reject</button>
+          <a href="{{ route('leaves.index') }}" class="ui basic button">Back to List</a>
+        </div>
+      </form>
+    </div>
+  @end
+@end

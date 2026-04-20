@@ -1,0 +1,32 @@
+@component('components/layouts/master', { title: leave ? 'Edit Leave Request' : 'New Leave Request' })
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Create Leave Request</h2>
+      
+      <form action="{{ route('leaves.store') }}" method="POST" class="ui form segment">
+        {{ csrfField() }}
+        
+        <div class="field">
+          <label>Leave Type:</label>
+          <select name="leaveType" class="ui dropdown">
+            <option value="ลาป่วย">Sick Leave</option>
+            <option value="ลากิจ">Personal Leave</option>
+            <option value="ลาพักร้อน">Vacation Leave</option>
+          </select>
+        </div>
+        
+        <div class="two fields">
+          @!input({ name: 'startDate', type: 'date', label: 'Start Date:', required: true })
+          @!input({ name: 'endDate', type: 'date', label: 'End Date:', required: true })
+        </div>
+        
+        @!textarea({ name: 'reason', label: 'Reason:', rows: 3, required: true })
+        
+        <div style="margin-top: 20px;">
+          @!button({ type: 'submit', label: 'Save' })
+          @!button({ label: 'Cancel', action: route('dashboard') })
+        </div>
+      </form>
+    </div>
+  @end
+@end

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic.min.css">
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <script src="/semantic/semantic.min.js"></script>
+
+    @if($slots.style)
+    <style>
+        {{{ await $slots.style() }}}
+    </style>
+    @end
+    <style>
+        .left-sidebar-bg {
+            background-color: #C8EAD1 !important; /* สีเทาอ่อนๆ */
+            min-height: 100vh !important; /* เพื่อให้สีพื้นหลังลากยาวลงมาด้านล่าง */
+            border-right: 1px solid #ddd; /* เพิ่มเส้นคั่นให้ดูมีมิติ */
+        }
+    </style>
+    
+</head>
+<body>
+    @if($slots.navbar)
+        {{{ await $slots.navbar() }}}
+    @else
+        @include('partials/navbar')
+    @end
+
+    <div class="ui container" style="margin-top: 20px;">
+        @if(flashMessages.has('success'))
+            <div class="ui positive message">
+                {{ flashMessages.get('success') }}
+            </div>
+        @end
+        @if(flashMessages.has('error'))
+            <div class="ui negative message">
+                {{ flashMessages.get('error') }}
+            </div>
+        @end
+
+        @if(auth.isAuthenticated)
+            <div class="ui grid">
+                <!-- Sidebar -->
+                <div class="three wide column left-sidebar-bg">
+                    <div class="ui vertical fluid menu" style="box-shadow: none; background: transparent;">
+                        <a class="ui fluid blue labeled icon button" href="{{ route('leaves.index') }}" style="margin-bottom: 10px;">
+                            <i class="list icon"></i>
+                            Leave Request
+                        </a>
+                        <a class="ui fluid green labeled icon button" href="{{ route('leaves.create') }}" style="margin-bottom: 10px;">
+                            <i class="plus icon"></i>
+                            Create Leave Request
+                        </a>
+                        <a class="ui fluid orange labeled icon button" href="{{ route('allowances.index') }}" style="margin-bottom: 10px;">
+                            <i class="money bill alternate outline icon"></i>
+                            Allowance Request
+                        </a>
+                        <a class="ui fluid teal labeled icon button" href="{{ route('allowances.create') }}">
+                            <i class="file alternate icon"></i>
+                            Create Allowance Request
+                        </a>
+                </div>        
+            </div>
+
+                <!-- Main Content -->
+                <div class="thirteen wide column">
+                    {{{ await $slots.main() }}}
+                </div>
+            </div>
+        @else
+            <!-- Guest / Non-Sidebar Pages -->
+            {{{ await $slots.main() }}}
+        @end
+    </div>
+
+    @if($slots.script)
+        {{{ await $slots.script() }}}
+    @end
+    
+    <script>
+        $('.ui.dropdown').dropdown();
+    </script>
+</body>
+</html>

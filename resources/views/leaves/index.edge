@@ -1,0 +1,53 @@
+@component('components/layouts/master', { title: 'ระบบลางาน - รายการลางาน' })
+
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Leave Request</h2>
+      <p>Your role: <span class="ui blue label">{{ userRole }}</span></p>
+      <table class="ui celled striped table">
+        <thead>
+          <tr>
+            <th>Employee Name</th>
+            <th>Leave Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(req in requests)
+          <tr>
+            <td>{{ req.user ? req.user.fullName : '-' }}</td>
+            <td>{{ req.leaveType }}</td>
+            <td>{{ req.startDate.toFormat('dd-MM-yyyy') || req.startDate }}</td>
+            <td>{{ req.endDate.toFormat('dd-MM-yyyy') || req.endDate }}</td>
+            <td>{{ req.reason }}</td>
+            <td>
+              @if(req.status === 0)
+                <div class="ui yellow label">Pending</div>
+              @elseif(req.status === 1)
+                <div class="ui green label">Approved</div>
+              @else
+                <div class="ui red label">Rejected<br><small>{{ req.rejectReason || 'No reason' }}</small></div>
+              @end
+            </td>
+            <td>
+              @if(userRole === 'HR' && req.status === 0)
+                <a href="{{ route('leaves.review', { id: req.id }) }}" class="ui mini blue button">พิจารณาคำขอ</a>
+              @else
+                -
+              @end
+            </td>
+          </tr>
+          @else
+          <tr>
+            <td colspan="7" class="center aligned">No leave requests found</td>
+          </tr>
+          @end
+        </tbody>
+      </table>
+    </div>
+  @end
+@end

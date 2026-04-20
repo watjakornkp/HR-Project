@@ -1,0 +1,51 @@
+@component('components/layouts/master', { title: 'รายการเบี้ยเลี้ยง' })
+
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Allowance Request</h2>
+      <p>Your role: <span class="ui blue label">{{ userRole }}</span></p>
+      <table class="ui celled striped table">
+        <thead>
+          <tr>
+            <th>Employee Name</th>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Expense Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(req in allowances)
+          <tr>
+            <td>{{ req.user ? req.user.fullName : '-' }}</td>
+            <td>{{ req.title }}</td>
+            <td>{{ req.amount }} บาท</td>
+            <td>{{ req.expenseDate.toFormat('dd-MM-yyyy') || req.expenseDate }}</td>
+            <td>
+              @if(req.status === 0)
+                <div class="ui yellow label">Pending</div>
+              @elseif(req.status === 1)
+                <div class="ui green label">Approved</div>
+              @else
+                <div class="ui red label">Rejected<br><small>{{ req.rejectReason || 'No reason' }}</small></div>
+              @end
+            </td>
+            <td>
+              @if(userRole === 'HR' && req.status === 0)
+                <a href="{{ route('allowances.review', { id: req.id }) }}" class="ui mini blue button">Review</a>
+              @else
+                -
+              @end
+            </td>
+          </tr>
+          @else
+          <tr>
+            <td colspan="6" class="center aligned">No allowance requests found</td>
+          </tr>
+          @end
+        </tbody>
+      </table>
+    </div>
+  @end
+@end

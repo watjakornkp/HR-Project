@@ -1,0 +1,59 @@
+@component('components/layouts/master', { title: 'Register - HR System' })
+
+  @slot('main')
+    <div class="ui middle aligned center aligned grid" style="height: 80vh;">
+      <div class="column" style="max-width: 450px; text-align: left;">
+        <form action="{{ route('users.register') }}" method="POST" class="ui large form">
+          {{ csrfField() }}
+          <div class="ui stacked segment">
+            <h2 class="ui teal header" style="text-align: center;">Registeration</h2>
+            
+            <div class="field">
+              <label>Full Name</label>
+              <div class="ui left icon input">
+                <i class="id card icon"></i>
+                <input type="text" name="fullName" placeholder="สมชาย ใจดี" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Username</label>
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" name="username" placeholder="somchai_j" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Password</label>
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password" name="password" placeholder="Password" required>
+              </div>
+            </div>
+
+            <div class="two fields">
+              <div class="field">
+                <label>Department</label>
+                <input type="text" name="department" placeholder="เช่น IT, HR, Sales" required>
+              </div>
+              <div class="field">
+                <label>Role</label>
+                <select name="role" class="ui dropdown">
+                  <option value="STAFF">STAFF</option>
+                  <option value="HR">HR</option>
+                  <option value="MANAGER">MANAGER</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="ui fluid large teal submit button" style="margin-top: 15px;">Create Account</button>
+          </div>
+        </form>
+        <div class="ui message" style="text-align: center;">
+          Already have an account? <a href="{{ route('login') }}">Login</a>
+        </div>
+      </div>
+    </div>
+  @end
+@end

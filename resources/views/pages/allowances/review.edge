@@ -1,0 +1,47 @@
+@component('components/layouts/master', { title: 'ระบบเบี้ยเลี้ยง - พิจารณาเบี้ยเลี้ยง' })
+
+  @slot('main')
+    <div class="ui container" style="margin-top: 30px;">
+      <h2 class="ui header">Review Allowance Request</h2>
+      
+      <div class="ui segment">
+        <h4 class="ui dividing header">Allowance Details</h4>
+        <div class="ui relaxed list">
+          <div class="item">
+            <i class="user icon"></i>
+            <div class="content"><strong>Employee Name:</strong> {{ req.user ? req.user.fullName : '-' }}</div>
+          </div>
+          <div class="item">
+            <i class="money bill alternate icon"></i>
+            <div class="content"><strong>Title:</strong> {{ req.title }}</div>
+          </div>
+          <div class="item">
+            <i class="calculator icon"></i>
+            <div class="content"><strong>Amount (Baht):</strong> {{ req.amount }}</div>
+          </div>
+          <div class="item">
+            <i class="calendar alternate icon"></i>
+            <div class="content"><strong>Expense Date:</strong> {{ req.expenseDate.toFormat('dd-MM-yyyy') || req.expenseDate }}</div>
+          </div>
+        </div>
+      </div>
+
+      <form method="POST" class="ui form segment">
+        {{ csrfField() }}
+        <h4 class="ui header">HR Decision</h4>
+        
+        <div class="field">
+          <label>Reason (Required when rejecting):</label>
+          <textarea name="rejectReason" rows="3" placeholder="Enter reason..."></textarea>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <!-- ใช้ formaction สร้างปุ่ม 2 อันที่ยิงไปคนละ Route ได้สบายๆ ใน Form เดียว -->
+          <button type="submit" formaction="{{ route('allowances.approve', { id: req.id }) }}" class="ui positive button"><i class="check icon"></i> Approve</button>
+          <button type="submit" formaction="{{ route('allowances.reject', { id: req.id }) }}" class="ui negative button"><i class="times icon"></i> Reject</button>
+          <a href="{{ route('allowances.index') }}" class="ui basic button">Back to List</a>
+        </div>
+      </form>
+    </div>
+  @end
+@end
