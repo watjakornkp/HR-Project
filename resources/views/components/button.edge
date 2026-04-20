@@ -1,9 +1,5 @@
-@if(type == 'submit')
-  <button type="submit" class="{{ className || 'ui primary button' }}">
-    {{ label || 'Save' }}
-  </button>
-@else
-  <a href="{{ action || '#' }}" class="{{ className || 'ui button' }}" style="color: rgba(0,0,0,.6) !important;">
-    {{ label || 'Cancel' }}
-  </a>
-@end
+<a class="ui button" 
+    @if(id) id="{{id}}" @end
+    @if(action) href="{{action}}" @end>
+    {{label}}
+</a>
