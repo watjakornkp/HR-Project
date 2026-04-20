@@ -11,7 +11,7 @@
           @!input({ name: 'expenseDate', type: 'date', label: 'Expense Date:', required: true })
         </div>
         <div style="margin-top: 20px;">
-          @!button({ type: 'submit', label: 'Save' })
+          <input type="submit" class="ui button" value="Save">
           @!button({ label: 'Cancel', action: route('dashboard') })
         </div>
       </form>
