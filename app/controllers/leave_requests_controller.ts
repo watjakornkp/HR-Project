@@ -5,38 +5,48 @@ import { DateTime } from 'luxon'
 
 export default class LeaveRequestsController {
 
-    async index({auth, view, request}: HttpContext) {
+    async index({ auth, view, request }: HttpContext) {
         const user = auth.getUserOrFail()
         const statusFilter = request.input('status')
         const query = LeaveRequest.query().preload('user')
-        if(user.role !== 'HR'){
-            query.where('userId',user.id)
+        if (user.role !== 'HR') {
+            query.where('userId', user.id)
         }
-        if(statusFilter){
-            query.where('status',statusFilter)
+        if (statusFilter) {
+            query.where('status', statusFilter)
         }
-        const requests = await query.orderBy('createdAt','desc')
-        return view.render('leaves/index',{requests,userRole:user.role}) 
-    } 
+        const requests = await query.orderBy('createdAt', 'desc')
+        return view.render('leaves/index', { requests, userRole: user.role })
+    }
 
-    async store({auth, request, response, session}: HttpContext) {
-        const user = auth.getUserOrFail()
-        const payload = await request.validateUsing(createLeaveValidator)
-        await LeaveRequest.create({
-            userId: user.id,
-            leaveType: payload.leaveType,
-            startDate: DateTime.fromJSDate(payload.startDate), 
-            endDate: DateTime.fromJSDate(payload.endDate),
-            reason: payload.reason,
-            status: 0,}
-        )
-        session.flash('success', 'สร้างคำขอวันลาของคุณเรียบร้อยแล้ว')
-        return response.redirect().toRoute('dashboard')
+    async store({ auth, request, response, session }: HttpContext) {
+        try {
+            const user = auth.getUserOrFail()
+            const payload = await request.validateUsing(createLeaveValidator)
+            
+            const leave = new LeaveRequest()
+            leave.userId = user.id
+            leave.leaveType = payload.leaveType
+            leave.startDate = DateTime.fromISO(request.input('startDate'))
+            leave.endDate = DateTime.fromISO(request.input('endDate'))
+            leave.reason = payload.reason
+            leave.status = 0
+            
+            await leave.save()
+            
+            session.flash('success', 'สร้างคำขอวันลาของคุณเรียบร้อยแล้ว')
+            return response.redirect().toRoute('dashboard')
+        } catch (error) {
+            console.log('--- Error in store LeaveRequest ---')
+            console.log(error)
+            session.flash('error', 'ไม่สามารถบันทึกข้อมูลได้ โปรดตรวจสอบข้อมูลอีกครั้ง')
+            return response.redirect().back()
+        }
     }
 
     async show({ auth, params, response, view, session }: HttpContext) {
         const user = auth.getUserOrFail()
-        if (user.role !== 'HR'){
+        if (user.role !== 'HR') {
             session.flash('error', 'Only HR can review requests')
             return response.redirect().back()
         }
@@ -45,9 +55,9 @@ export default class LeaveRequestsController {
         return view.render('pages/leaves/review', { req: request })
     }
 
-    async approve({auth, params, response, session}:HttpContext){
+    async approve({ auth, params, response, session }: HttpContext) {
         const user = auth.getUserOrFail()
-        if (user.role !== 'HR'){
+        if (user.role !== 'HR') {
             session.flash('error', 'Only HR can approve requests')
             return response.redirect().back()
         }
@@ -62,13 +72,13 @@ export default class LeaveRequestsController {
 
     async reject({ auth, params, request, response, session }: HttpContext) {
         const user = auth.getUserOrFail()
-        if (user.role !== 'HR'){
+        if (user.role !== 'HR') {
             session.flash('error', 'Only HR can reject requests')
             return response.redirect().back()
         }
         const id = params.id
         const leave = await LeaveRequest.findOrFail(id)
-        leave.status = 2 
+        leave.status = 2
         leave.approvedBy = user.id
         leave.rejectReason = request.input('rejectReason')
         await leave.save()
