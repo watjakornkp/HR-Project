@@ -5,7 +5,7 @@
       
       <form action="{{ route('allowances.store') }}" method="POST" class="ui form segment">
         {{ csrfField() }}
-        @!input({ name: 'title', type: 'text', label: 'Title:', required: true, placeholder: 'เช่น ค่าที่พัก, ค่าเดินทาง' })
+          @!input({ name: 'title', type: 'text', label: 'Title:', required: true, placeholder: 'เช่น ค่าที่พัก, ค่าเดินทาง' })
         <div class="two fields">
           @!input({ name: 'amount', type: 'number', label: 'Amount (Baht):', required: true, placeholder: '0.00' })
           @!input({ name: 'expenseDate', type: 'date', label: 'Expense Date:', required: true })
