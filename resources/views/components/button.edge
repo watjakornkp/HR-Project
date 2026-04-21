@@ -1,5 +1,5 @@
 <a class="ui button" 
-    @if(id) id="{{id}}" @end
-    @if(action) href="{{action}}" @end>
-    {{label}}
+    {{ id ? `id="${id}"` : '' }} 
+    {{ action ? `href="${action}"` : '' }}>
+    {{ label }}
 </a>
