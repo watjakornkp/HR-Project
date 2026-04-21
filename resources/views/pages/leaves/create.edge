@@ -9,9 +9,9 @@
         <div class="field">
           <label>Leave Type:</label>
           <select name="leaveType" class="ui dropdown">
-            <option value="ลาป่วย">Sick Leave</option>
-            <option value="ลากิจ">Personal Leave</option>
-            <option value="ลาพักร้อน">Vacation Leave</option>
+            <option value="Sick">Sick Leave</option>
+            <option value="Personal">Personal Leave</option>
+            <option value="Vacation">Vacation Leave</option>
           </select>
         </div>
         
@@ -19,7 +19,6 @@
           @!input({ name: 'startDate', type: 'date', label: 'Start Date:', required: true })
           @!input({ name: 'endDate', type: 'date', label: 'End Date:', required: true })
         </div>
-        
         @!textarea({ name: 'reason', label: 'Reason:', rows: 3, required: true })
         
         <div style="margin-top: 20px;">
